@@ -66,6 +66,5 @@ int main()
 	Fruit::eatFrut(choice)->DisplayColor();
 
 	return 0;
-	
 }
 
