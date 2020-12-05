@@ -1,0 +1,69 @@
+//Program to implement Factory Design Pattern
+#include<iostream>
+using namespace std;
+
+enum ClassType
+{
+	TwoClass, ThreeClass
+};
+
+//Abstract Vehicle Class
+class Vehicle
+{
+public:
+	virtual void PrintVehicle() = 0;
+	static Vehicle* getVehicle(ClassType type);
+};
+
+class TwoWheeler : public Vehicle
+{
+public:
+	void PrintVehicle()
+	{
+		cout << "Two Wheeler";
+	}
+};
+
+class ThreeWheeler : public Vehicle
+{
+public:
+	void PrintVehicle()
+	{
+		cout << "Three Wheeler";
+	}
+};
+
+Vehicle* Vehicle::getVehicle(ClassType type)
+{
+	if (type == TwoClass)
+		return new TwoWheeler();
+	else if (type == ThreeClass)
+		return new ThreeWheeler();
+	else
+		return NULL;
+}
+
+class Client
+{
+private:
+	Vehicle* vType;
+public:
+	Client()
+	{
+		ClassType type = TwoClass;
+		vType = Vehicle::getVehicle(type);
+	}
+
+	Vehicle* getVehicleClient()
+	{
+		return vType;
+	}
+};
+
+int main()
+{
+	Client* cType = new Client();
+	Vehicle* vType = cType->getVehicleClient();
+	vType->PrintVehicle();
+	return 0;
+}
