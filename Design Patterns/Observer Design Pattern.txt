@@ -1,0 +1,145 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+class Car
+{
+	int position;
+	int tmp;
+	vector<class Observer*> observerList;
+
+public:
+	int getPosition()
+	{
+		return position;
+	}
+
+	void SetPosition(int pos)
+	{
+		position = pos;
+		notify();
+	}
+
+	void Attach(Observer* obs)
+	{
+		observerList.push_back(obs);
+	}
+
+	void Detach(Observer* obs)
+	{
+		observerList.erase(remove(observerList.begin(), observerList.end(), obs), observerList.end());
+	}
+
+	void notify();
+};
+
+class Observer
+{
+	Car* _car;
+public:
+	Observer(Car* car)
+	{
+		_car = car;
+		_car->Attach(this);
+	}
+
+	virtual void Update() = 0;
+protected:
+	Car* getCar()
+	{
+		return _car;
+	}
+};
+
+void Car::notify()
+{
+	for (int i = 0; i<observerList.size(); i++)
+		observerList[i]->Update();
+}
+
+class LeftObserver : public Observer
+{
+public:
+	LeftObserver(Car* car) : Observer(car){}
+	void Update()
+	{
+		int pos = getCar()->getPosition();
+		if (pos < 0)
+			cout << "left side";
+	}
+};
+
+class RightObserver : public Observer
+{
+public:
+	RightObserver(Car* car) : Observer(car){}
+	void Update()
+	{
+		int pos = getCar()->getPosition();
+		if (pos < 0)
+			cout << "right side";
+	}
+};
+
+class MiddleObserver : public Observer
+{
+public:
+	MiddleObserver(Car* car) : Observer(car){}
+	void Update()
+	{
+		int pos = getCar()->getPosition();
+		if (pos < 0)
+			cout << "straight side";
+	}
+};
+
+int main()
+{
+	Car* car = new Car();
+
+	LeftObserver left(car);
+	RightObserver right(car);
+	MiddleObserver middle(car);
+
+	cout << "hit left right button to drive a car in your city!!! and press break to close" << endl;
+
+	char pressed_button;
+	bool break_loop = false;
+
+	while (break_loop == false)
+	{
+		cin >> pressed_button;
+
+		switch (pressed_button)
+		{
+		case 108:
+		{ // l -->  pressed for left side
+			car->SetPosition(-1);
+			break;
+		}
+		case 99:
+		{ // c --> pressed for center
+			car->SetPosition(0);
+			break;
+		}
+		case 114:
+		{ // r --> pressed for right side
+			car->SetPosition(1);
+			break;
+		}
+		case 98:
+		{ // b --> pressed for break
+			break_loop = true;
+			break;
+		}
+		default:
+		{
+			cout << "please drive carefully!!" << endl;
+			break;
+		}
+		}
+	}
+
+	return 0;
+}
