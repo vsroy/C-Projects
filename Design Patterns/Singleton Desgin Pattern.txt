@@ -1,0 +1,37 @@
+//Program to implement Singleton Design Pattern
+#include<iostream>
+using namespace std;
+
+class GameSetting
+{
+public:
+	static GameSetting* getInstance()
+	{
+		if (gameObj == NULL)
+			gameObj = new GameSetting();
+		return gameObj;
+	}
+	void PrintHeightWidth()
+	{
+		cout << "height = " << height << " and width = " << width;
+	}
+
+	void PrintHeightWidth(int lheight, int lwidth)
+	{
+		cout << "height = " << lheight << " and width = " << lwidth;
+	}
+private:
+	int height;
+	int width;
+	static GameSetting* gameObj;
+	GameSetting() : height(1080), width(1920){}
+};
+
+GameSetting* GameSetting::gameObj = NULL;
+
+int main()
+{
+	//GameSetting::getInstance()->PrintHeightWidth();
+	GameSetting::getInstance()->PrintHeightWidth(10, 20);
+	return 0;
+}
