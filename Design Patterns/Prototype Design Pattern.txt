@@ -1,0 +1,71 @@
+//In the Prototype Design pattern,we have a template where some parameters are set beforehand and we have to set only a few parameters
+#include<iostream>
+#include<unordered_map>
+#include<string>
+#include<memory>
+using namespace std;
+
+//Base Prototype Class
+class Bullet
+{
+protected:
+	int _speed;
+	string _bullet_name;
+	int _direction;
+
+public:
+	Bullet(){}
+	Bullet(string name, int speed) : _bullet_name(name), _speed(speed){}
+	virtual ~Bullet(){};
+	virtual unique_ptr<Bullet> clone() = 0;
+
+	void Fire(int direction)
+	{
+		cout << "Name = " << _bullet_name << endl;
+		cout << "Speed = " << _speed << endl;
+		cout << "Direction = " << direction << endl;
+	}
+};
+
+//Simple Bullet is a concrete prototype
+class SimpleBullet : public Bullet
+{
+public:
+	SimpleBullet(string name ,int speed) : Bullet(name, speed){};
+
+	unique_ptr<Bullet> clone() override
+	{
+		return make_unique<SimpleBullet>(*this);
+	}
+};
+
+enum BulletType
+{
+	SIMPLE, GOOD
+};
+
+//The Client class that get ownership of the Bullet class
+class BulletFactory
+{
+private:
+	unordered_map<BulletType, unique_ptr<Bullet>> m_bullets;
+
+public:
+	BulletFactory()
+	{
+		m_bullets[SIMPLE] = make_unique<SimpleBullet>("SimpleBullet", 75);
+	}
+
+	unique_ptr<Bullet> createBullet(BulletType type)
+	{
+		return m_bullets[type]->clone();
+	}
+};
+
+int main()
+{
+	BulletFactory bfactory;
+	auto Bullet = bfactory.createBullet(SIMPLE);
+	Bullet->Fire(150);
+	return 0;
+}
